@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
+
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -27,18 +32,55 @@ export default function Login() {
     }
 
     return (
-        <div className='flex-1 text-xs sm:text-sm flex flex-col justify-center items-center gap-2 sm:gap-4'>
-            <h1 className='font-extrabold select-none text-2xl sm:text-4xl uppercase'>{isLoggingIn ? 'Login' : 'register'}</h1>
-            {error && <div className='w-full max-w-[40ch] border-rose-400 border text-center border-solid text-rose-400 py-2'>{error}</div>}
-            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Email Address' className='outline-none duration-300 border-b-2 border-solid border-white focus:border-cyan-300 text-slate-900 p-2 w-full max-w-[40ch]' />
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='Password' className='outline-none text-slate-900 p-2 w-full max-w-[40ch] duration-300 border-b-2 border-solid border-white focus:border-cyan-300' />
-            <button onClick={submitHandler} className='w-full max-w-[40ch] border border-white border-solid uppercase py-2 duration-300 relative after:absolute after:top-0 after:right-full after:bg-white after:z-10 after:w-full after:h-full overflow-hidden hover:after:translate-x-full after:duration-300 hover:text-slate-900'>
-                <h2 className='relative z-20'>
-                    SUBMIT
-                </h2>
-            </button>
-            <h2 className='duration-300 hover:scale-110 cursor-pointer' onClick={() => setIsLoggingIn(!isLoggingIn)}>{!isLoggingIn ? 'Login' : 'Register'}</h2>
-
+        <div className='flex-1 flex justify-center items-center px-4'>
+            <Card className='w-full max-w-md'>
+                <CardHeader>
+                    <CardTitle>{isLoggingIn ? 'Login' : 'Register'}</CardTitle>
+                    <CardDescription>Enter your credentials to {isLoggingIn ? 'login to' : 'create'} your account</CardDescription>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                    {error && (
+                        <div className="p-3 text-sm text-red-500 bg-red-100 rounded-md">
+                            {error}
+                        </div>
+                    )}
+                    <div className='space-y-2'>
+                        <Label htmlFor='email'>Email</Label>
+                        <Input
+                            id='email'
+                            type='email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder='Enter your email'
+                        />
+                    </div>
+                    <div className='space-y-2'>
+                        <Label htmlFor='password'>Password</Label>
+                        <Input
+                            id='password'
+                            type='password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder='Enter your password'
+                        />
+                    </div>
+                </CardContent>
+                <CardFooter className='flex flex-col gap-4'>
+                    <Button
+                        className='w-full'
+                        onClick={submitHandler}
+                    >
+                        {isLoggingIn ? 'Login' : 'Register'}
+                    </Button>
+                    <Button
+                        variant='ghost'
+                        className='w-full'
+                        onClick={() => setIsLoggingIn(!isLoggingIn)}
+                    >
+                        {isLoggingIn ? 'Need an account? Register' : 'Already have an account? Login'}
+                    </Button>
+                </CardFooter>
+            </Card>
         </div>
     )
 }

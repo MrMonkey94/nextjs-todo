@@ -17,21 +17,21 @@ export default function UserDashboard() {
 
     console.log(todos)
 
-    // useEffect(() => {
-    //     if (!userInfo || Object.keys(userInfo).length === 0) {
-    //         setAddTodo(true)
-    //     }
-    // }, [userInfo])
+    function handleAddEdit(todoKey) {
+        return () => {
+            setEdit(todoKey)
+            setEdittedValue(todos[todoKey])
+        }
+    }
 
     async function handleAddTodo() {
         if (!todo) { return }
         const newKey = Object.keys(todos).length === 0 ? 1 : Math.max(...Object.keys(todos)) + 1
-        setTodos({ ...todos, [newKey]: todo })
+        const updatedTodos = { ...todos, [newKey]: todo }
+        setTodos(updatedTodos)
         const userRef = doc(db, 'users', currentUser.uid)
         await setDoc(userRef, {
-            'todos': {
-                [newKey]: todo
-            }
+            todos: updatedTodos
         }, { merge: true })
         setTodo('')
     }
@@ -39,39 +39,25 @@ export default function UserDashboard() {
     async function handleEditTodo() {
         if (!edittedValue) { return }
         const newKey = edit
-        setTodos({ ...todos, [newKey]: edittedValue })
+        const updatedTodos = { ...todos, [newKey]: edittedValue }
+        setTodos(updatedTodos)
         const userRef = doc(db, 'users', currentUser.uid)
         await setDoc(userRef, {
-            'todos': {
-                [newKey]: edittedValue
-            }
+            todos: updatedTodos
         }, { merge: true })
         setEdit(null)
         setEdittedValue('')
     }
 
-    function handleAddEdit(todoKey) {
-        return () => {
-            console.log(todos[todoKey])
-            console.log('bannan')
-            setEdit(todoKey)
-            setEdittedValue(todos[todoKey])
-        }
-    }
-
-    function handleDelete(todoKey) {
+    async function handleDelete(todoKey) {
         return async () => {
             const tempObj = { ...todos }
             delete tempObj[todoKey]
-
             setTodos(tempObj)
             const userRef = doc(db, 'users', currentUser.uid)
             await setDoc(userRef, {
-                'todos': {
-                    [todoKey]: deleteField()
-                }
+                todos: tempObj
             }, { merge: true })
-
         }
     }
 

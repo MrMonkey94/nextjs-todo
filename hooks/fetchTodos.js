@@ -6,7 +6,7 @@ import { db } from '../firebase'
 export default function useFetchTodos() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [todos, setTodos] = useState(null)
+    const [todos, setTodos] = useState({})
 
     const { currentUser } = useAuth()
 
