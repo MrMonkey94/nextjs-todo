@@ -1,24 +1,49 @@
 import React from 'react'
+import { Card } from "./ui/card"
+import { Input } from "./ui/input"
+import { Button } from "./ui/button"
+import { Pencil, Trash2, Check } from 'lucide-react'
 
-export default function TodoCard(props) {
-    const { children, edit, handleAddEdit, edittedValue, setEdittedValue, todoKey, handleEditTodo, handleDelete } = props
-
-
-
-
+export default function TodoCard({ children, edit, handleAddEdit, todoKey, edittedValue, setEdittedValue, handleEditTodo, handleDelete }) {
     return (
-        <div className='p-2 relative sm:p-3 border flex items-stretch border-white border-solid '>
-
-            <div className='flex-1 flex'>
-                {!(edit === todoKey) ? <>{children}</> : (
-                    <input className='bg-inherit flex-1 text-white outline-none' value={edittedValue} onChange={(e) => setEdittedValue(e.target.value)} />
+        <Card className='p-4 flex items-center justify-between gap-4 bg-white'>
+            <div className='flex-1'>
+                {!(edit === todoKey) ? (
+                    <p className='text-sm text-gray-700'>{children}</p>
+                ) : (
+                    <Input
+                        value={edittedValue}
+                        onChange={(e) => setEdittedValue(e.target.value)}
+                        className='text-sm'
+                    />
                 )}
-                {/* {children} */}
             </div>
-            <div className='flex items-center'>
-                {(edit === todoKey) ? <i onClick={handleEditTodo} className="fa-solid fa-check px-2 duration-300 hover:scale-125 cursor-pointer"></i> : <i onClick={handleAddEdit(todoKey)} className="fa-solid fa-pencil px-2 duration-300 hover:rotate-45 cursor-pointer"></i>}
-                <i onClick={handleDelete(todoKey)} className="fa-solid fa-trash-can px-2 duration-300 hover:scale-125 cursor-pointer"></i>
+            <div className='flex items-center gap-2'>
+                {(edit === todoKey) ? (
+                    <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={handleEditTodo}
+                    >
+                        <Check className='h-4 w-4' />
+                    </Button>
+                ) : (
+                    <Button
+                        variant='ghost'
+                        size='icon'
+                        onClick={handleAddEdit(todoKey)}
+                    >
+                        <Pencil className='h-4 w-4' />
+                    </Button>
+                )}
+                <Button
+                    variant='ghost'
+                    size='icon'
+                    onClick={handleDelete(todoKey)}
+                >
+                    <Trash2 className='h-4 w-4 text-red-500' />
+                </Button>
             </div>
-        </div>
+        </Card>
     )
 }

@@ -4,6 +4,9 @@ import TodoCard from './TodoCard'
 import { doc, setDoc, deleteField } from 'firebase/firestore'
 import { db } from '../firebase'
 import useFetchTodos from '../hooks/fetchTodos'
+import { Card } from "./ui/card"
+import { Input } from "./ui/input"
+import { Button } from "./ui/button"
 
 export default function UserDashboard() {
     const { userInfo, currentUser } = useAuth()
@@ -62,26 +65,44 @@ export default function UserDashboard() {
     }
 
     return (
-        <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col flex-1 gap-3 sm:gap-5'>
-            <div className='flex items-stretch'>
-                <input type='text' placeholder="Enter todo" value={todo} onChange={(e) => setTodo(e.target.value)} className="outline-none p-3 text-base sm:text-lg text-slate-900 flex-1" />
-                <button onClick={handleAddTodo} className='w-fit px-4 sm:px-6 py-2 sm:py-3 bg-amber-400 text-white font-medium text-base duration-300 hover:opacity-40'>ADD</button>
-            </div>
-            {(loading) && (<div className='flex-1 grid place-items-center'>
-                <i className="fa-solid fa-spinner animate-spin text-6xl"></i>
-            </div>)}
-            {(!loading) && (
-                <>
-                    {Object.keys(todos).map((todo, i) => {
-                        return (
-                            <TodoCard handleEditTodo={handleEditTodo} key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue} handleDelete={handleDelete}>
+        <div className='container mx-auto py-6 max-w-2xl'>
+            <Card className='p-6 bg-white shadow-sm'>
+                <div className='flex gap-2'>
+                    <Input 
+                        type='text' 
+                        placeholder="Add a new todo" 
+                        value={todo} 
+                        onChange={(e) => setTodo(e.target.value)}
+                        className="flex-1"
+                    />
+                    <Button onClick={handleAddTodo} variant="default">
+                        Add
+                    </Button>
+                </div>
+                {loading && (
+                    <div className='flex justify-center items-center py-8'>
+                        <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full"></div>
+                    </div>
+                )}
+                {!loading && (
+                    <div className='mt-6 space-y-4'>
+                        {Object.keys(todos).map((todo, i) => (
+                            <TodoCard 
+                                key={i}
+                                handleEditTodo={handleEditTodo}
+                                handleAddEdit={handleAddEdit}
+                                edit={edit}
+                                todoKey={todo}
+                                edittedValue={edittedValue}
+                                setEdittedValue={setEdittedValue}
+                                handleDelete={handleDelete}
+                            >
                                 {todos[todo]}
                             </TodoCard>
-                        )
-                    })}
-                </>
-            )}
-            {/* {!addTodo && <button onClick={() => setAddTodo(true)} className='text-cyan-300 border border-solid border-cyan-300 py-2 text-center uppercase text-lg duration-300 hover:opacity-30'>ADD TODO</button>} */}
+                        ))}
+                    </div>
+                )}
+            </Card>
         </div>
     )
 }
